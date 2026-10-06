@@ -1,0 +1,46 @@
+name: Post a job / referral
+description: Share an open role at your company
+title: "[Job] "
+labels: ["job"]
+body:
+  - type: input
+    id: role
+    attributes:
+      label: Role title
+      placeholder: Senior Backend Engineer
+    validations:
+      required: true
+  - type: input
+    id: company
+    attributes:
+      label: Company
+    validations:
+      required: true
+  - type: dropdown
+    id: location
+    attributes:
+      label: Location
+      options:
+        - Remote
+        - Hybrid
+        - On-site
+    validations:
+      required: true
+  - type: input
+    id: apply
+    attributes:
+      label: Apply link / contact
+      placeholder: https://...
+    validations:
+      required: true
+  - type: checkboxes
+    id: referral
+    attributes:
+      label: Referral
+      options:
+        - label: I can refer candidates
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Team, stack, seniority, salary range if public.

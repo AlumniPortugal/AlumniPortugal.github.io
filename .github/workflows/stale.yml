@@ -1,0 +1,22 @@
+name: stale jobs
+on:
+  schedule: [{ cron: "0 6 * * *" }]
+  workflow_dispatch:
+permissions:
+  issues: write
+  pull-requests: write
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v9
+        with:
+          only-issue-labels: job
+          days-before-stale: 45
+          days-before-close: 7
+          start-date: "2026-10-06" # launch day — without this the first run flags the backlog
+          stale-issue-label: stale
+          days-before-pr-stale: -1
+          days-before-pr-close: -1
+          close-issue-message: "Closing as expired. Reopen or post again if still hiring."
+          exempt-issue-labels: pinned
