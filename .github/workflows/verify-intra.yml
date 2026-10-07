@@ -1,0 +1,35 @@
+name: verify 42 alumni
+# pull_request_target so fork PRs get the repo secrets (INTRA_UID/INTRA_SECRET).
+# The job runs base-branch code and reads PR data via the GitHub API only, so
+# no PR code is executed.
+on:
+  pull_request_target:
+    paths: ["data/alumni/**"]
+permissions:
+  contents: read
+  pull-requests: write
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+      - name: Verify intra usernames
+        env:
+          INTRA_UID: ${{ secrets.INTRA_UID }}
+          INTRA_SECRET: ${{ secrets.INTRA_SECRET }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: node scripts/verify-intra.mjs
+      - name: Post verification comment
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          [ -f comment.md ] || exit 0
+          gh pr comment "$PR_NUMBER" --body-file comment.md --edit-last 2>/dev/null \
+            || gh pr comment "$PR_NUMBER" --body-file comment.md
