@@ -13,9 +13,10 @@ Homepage + alumni directory + jobs board for the 42 Portugal alumni community.
 
 ## Join the directory
 
-1. Add a file at `data/alumni/<your-github-handle>.yml` (filename **must** equal your handle):
+1. Add a file at `data/alumni/<your-intra-username>.yml` (filename **must** equal your 42 intra username):
 
    ```yaml
+   intra_username: your42login
    name: Your Name
    github: yourhandle
    field: Backend
