@@ -1,8 +1,0 @@
-# Example entry — replace with real alumni via PR. Filename MUST equal the github handle.
-name: Octo Cat
-github: octocat
-field: Backend
-company: Example Lda
-location: Lisbon
-skills: [Go, Postgres]
-open_to: [mentoring, collaboration]
