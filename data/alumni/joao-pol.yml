@@ -4,5 +4,5 @@ github: mrsloth-dev
 field: Backend
 company: "LTPLabs, SA"
 location: Porto
-skills: [Python, FastAPI, Keycloak, Postgres]
-open_to: [collaboration, job_opportunities]
+skills: [Go, C, C++, Python, FastAPI, Keycloak, Postgres, ArgoCD, ArgoWorkflow]
+open_to: [collaboration, job_opportunities, mentoring]
