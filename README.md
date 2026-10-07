@@ -23,6 +23,7 @@ Homepage + alumni directory + jobs board for the 42 Portugal alumni community.
    company: Acme        # optional
    location: Porto      # optional
    skills: [Go, K8s]
+   # one or more of: mentoring | collaboration | job_opportunities
    open_to: [mentoring, collaboration]
    ```
 
