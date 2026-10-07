@@ -6,4 +6,5 @@ field: Backend
 company: 42Portugal
 location: Porto
 skills: [Go,C, C++, Postgres]
-open_to: [mentoring, collaboration, job_oportunity]
+# allowed values: mentoring | collaboration | job_opportunities
+open_to: [mentoring, collaboration, job_opportunities]

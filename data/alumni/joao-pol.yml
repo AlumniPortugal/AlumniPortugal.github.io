@@ -5,4 +5,4 @@ field: Backend
 company: "LTPLabs, SA"
 location: Porto
 skills: [Python, FastAPI, Keycloak, Postgres]
-open_to: [collaboration, job_oportunities]
+open_to: [collaboration, job_opportunities]

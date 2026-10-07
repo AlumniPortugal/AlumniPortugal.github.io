@@ -23,10 +23,11 @@ Homepage + alumni directory + jobs board for the 42 Portugal alumni community.
    company: Acme        # optional
    location: Porto      # optional
    skills: [Go, K8s]
+   # one or more of: mentoring | collaboration | job_opportunities
    open_to: [mentoring, collaboration]
    ```
 
-2. Open a PR. CI validates the entry; a board member reviews and merges.
+2. Open a PR. CI validates the entry and verifies your 42 intra username against the 42 API; a board member reviews and merges.
 3. The site rebuilds and deploys automatically.
 
 ## Post a job

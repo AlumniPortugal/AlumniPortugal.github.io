@@ -7,7 +7,7 @@ body:
     id: role
     attributes:
       label: Role title
-      placeholder: Senior Backend Engineer
+      placeholder: Junior Backend Engineer
     validations:
       required: true
   - type: input
@@ -17,13 +17,20 @@ body:
     validations:
       required: true
   - type: dropdown
-    id: location
+    id: type
     attributes:
-      label: Location
+      label: Type
       options:
         - Remote
         - Hybrid
         - On-site
+    validations:
+      required: true
+  - type: input
+    id: location
+    attributes:
+      label: Location
+      placeholder: Porto, Portugal
     validations:
       required: true
   - type: input

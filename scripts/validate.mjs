@@ -5,6 +5,8 @@ import yaml from 'js-yaml';
 
 const dir = path.join(process.cwd(), 'data', 'alumni');
 const REQUIRED = ['name', 'intra_username', 'github', 'field'];
+// Allowed `open_to` values. Keep in sync with the comment in README / the example entry.
+const OPEN_TO = ['mentoring', 'collaboration', 'job_opportunities'];
 const errs = [];
 const seen = new Set();
 
@@ -28,7 +30,12 @@ for (const f of fs.readdirSync(dir).filter((f) => /\.ya?ml$/.test(f))) {
     seen.add(a.github);
   }
   if (a.skills != null && !Array.isArray(a.skills)) errs.push(`${f}: skills must be a list`);
-  if (a.open_to != null && !Array.isArray(a.open_to)) errs.push(`${f}: open_to must be a list`);
+  if (a.open_to != null) {
+    if (!Array.isArray(a.open_to)) errs.push(`${f}: open_to must be a list`);
+    else
+      for (const o of a.open_to)
+        if (!OPEN_TO.includes(o)) errs.push(`${f}: open_to "${o}" not allowed (use: ${OPEN_TO.join(', ')})`);
+  }
 }
 
 if (errs.length) {
