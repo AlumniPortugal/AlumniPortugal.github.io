@@ -1,0 +1,29 @@
+name: diag intra
+on: [pull_request, workflow_dispatch]
+jobs:
+  diag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Probe 42 token endpoint
+        env:
+          INTRA_UID: ${{ secrets.INTRA_UID }}
+          INTRA_SECRET: ${{ secrets.INTRA_SECRET }}
+        run: |
+          redact() { sed -E 's/"(access_token|refresh_token)":"[^"]*"/"\1":"<redacted>"/g' | head -c 220 | tr '\n' ' '; }
+          probe() {
+            local label="$1"; shift
+            local code
+            code=$(curl -s -o /tmp/body -w '%{http_code}' "$@")
+            printf '### %s -> HTTP %s\n' "$label" "$code"
+            redact < /tmp/body; echo
+          }
+          T=https://api.intra.42.fr/oauth/token
+          probe "client_credentials (real)" -X POST "$T" -d "grant_type=client_credentials&client_id=$INTRA_UID&client_secret=$INTRA_SECRET"
+          probe "refresh_token (dummy)"    -X POST "$T" -d "grant_type=refresh_token&refresh_token=x&client_id=$INTRA_UID&client_secret=$INTRA_SECRET"
+          probe "authorization_code (dummy)" -X POST "$T" -d "grant_type=authorization_code&code=x&redirect_uri=https://example.com/cb&client_id=$INTRA_UID&client_secret=$INTRA_SECRET"
+          probe "client_credentials (browser headers)" -X POST "$T" \
+            -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36" \
+            -H "Accept: application/json" -H "Accept-Language: en-US,en;q=0.9" \
+            -H "Origin: https://profile-v3.intra.42.fr" -H "Referer: https://profile-v3.intra.42.fr/" \
+            -d "grant_type=client_credentials&client_id=$INTRA_UID&client_secret=$INTRA_SECRET"
+          probe "users GET (dummy bearer)" "https://api.intra.42.fr/v2/users?filter%5Blogin%5D=malallai" -H "Authorization: Bearer x"
