@@ -3,6 +3,7 @@ import path from 'node:path';
 import yaml from 'js-yaml';
 
 export type Alumni = {
+  intra_username: string;
   name: string;
   github: string;
   field: string;
