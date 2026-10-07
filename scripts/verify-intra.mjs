@@ -7,6 +7,10 @@ import fs from 'node:fs';
 import yaml from 'js-yaml';
 
 const API = 'https://api.intra.42.fr';
+// Cloudflare fronts the 42 API and challenges requests without a normal UA from
+// datacenter IPs (GitHub Actions), so send one.
+const UA =
+  'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36';
 const { INTRA_UID, INTRA_SECRET, GH_TOKEN, GITHUB_REPOSITORY, PR_NUMBER, HEAD_SHA } = process.env;
 
 const gh = async (path) => {
@@ -29,7 +33,11 @@ const intraToken = async () => {
   });
   const r = await fetch(`${API}/oauth/token`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      Accept: 'application/json',
+      'User-Agent': UA,
+    },
     body,
   });
   if (!r.ok) throw new Error(`42 token -> ${r.status} ${await r.text()}`);
@@ -38,7 +46,7 @@ const intraToken = async () => {
 
 const intraUser = async (login, token) => {
   const r = await fetch(`${API}/v2/users?filter[login]=${encodeURIComponent(login)}`, {
-    headers: { Authorization: `Bearer ${token}` },
+    headers: { Authorization: `Bearer ${token}`, Accept: 'application/json', 'User-Agent': UA },
   });
   if (!r.ok) throw new Error(`42 /v2/users?filter[login]=${login} -> ${r.status}`);
   const list = await r.json();
