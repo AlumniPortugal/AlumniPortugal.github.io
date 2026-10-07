@@ -1,8 +1,8 @@
 ## Directory submission
 
-- [ ] File is `data/alumni/<my-github-handle>.yml`
-- [ ] `github` field equals the filename
-- [ ] `name`, `github` and `field` are filled in
+- [ ] File is `data/alumni/<my-intra-username>.yml`
+- [ ] `intra_username` field equals the filename
+- [ ] `name`, `intra_username`, `github` and `field` are filled in
 - [ ] I'm a 42 Portugal alum
 
 **What are you adding/updating?**

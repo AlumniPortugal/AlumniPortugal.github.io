@@ -15,11 +15,12 @@ export default function Directory() {
       </p>
       <ul className="people">
         {people.map((a) => (
-          <li key={a.github}>
+          <li key={a.intra_username}>
             <strong>{a.name}</strong> — {a.field}
             {a.company ? ` @ ${a.company}` : ''}
             {a.location ? ` · ${a.location}` : ''}
             <br />
+            <span className="muted">@{a.intra_username}</span> ·{' '}
             <a href={`https://github.com/${a.github}`}>@{a.github}</a>
             {a.skills?.length ? <span className="muted"> · {a.skills.join(', ')}</span> : null}
           </li>

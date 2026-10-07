@@ -4,7 +4,7 @@ import path from 'node:path';
 import yaml from 'js-yaml';
 
 const dir = path.join(process.cwd(), 'data', 'alumni');
-const REQUIRED = ['name', 'github', 'field'];
+const REQUIRED = ['name', 'intra_username', 'github', 'field'];
 const errs = [];
 const seen = new Set();
 
@@ -22,9 +22,11 @@ for (const f of fs.readdirSync(dir).filter((f) => /\.ya?ml$/.test(f))) {
     continue;
   }
   for (const k of REQUIRED) if (!a[k]) errs.push(`${f}: missing "${k}"`);
-  if (a.github && a.github !== id) errs.push(`${f}: github "${a.github}" must match filename "${id}"`);
-  if (seen.has(a.github)) errs.push(`${f}: duplicate github "${a.github}"`);
-  seen.add(a.github);
+  if (a.intra_username && a.intra_username !== id) errs.push(`${f}: intra_username "${a.intra_username}" must match filename "${id}"`);
+  if (a.github) {
+    if (seen.has(a.github)) errs.push(`${f}: duplicate github "${a.github}"`);
+    seen.add(a.github);
+  }
   if (a.skills != null && !Array.isArray(a.skills)) errs.push(`${f}: skills must be a list`);
   if (a.open_to != null && !Array.isArray(a.open_to)) errs.push(`${f}: open_to must be a list`);
 }
