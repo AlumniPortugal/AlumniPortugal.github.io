@@ -1,6 +1,7 @@
-# Example entry — replace with real alumni via PR. Filename MUST equal the github handle.
+# Example entry — replace with real alumni via PR. Filename MUST equal the 42 intra username.
+intra_username: marvin
 name: Marvin
-github: Marvin42th
+github: marvin
 field: Backend
 company: 42Portugal
 location: Porto
