@@ -14,4 +14,7 @@ h1 { font-size: 1.8rem; }
 .card p { margin: 0 0 .75rem; color: #555; }
 .people { list-style: none; padding: 0; }
 .people li { background: #fff; border: 1px solid #e5e5e5; border-radius: 8px; padding: .75rem 1rem; margin-bottom: .5rem; }
+.filters { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1rem; }
+.filters input, .filters select { font: inherit; padding: .4rem .6rem; border: 1px solid #ccc; border-radius: 6px; background: #fff; }
+.filters input { flex: 1 1 200px; }
 .muted { color: #777; font-size: .9rem; }
