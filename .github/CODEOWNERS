@@ -1,4 +1,4 @@
-# Board reviews directory entries and everything else.
-# Create a `board` team, or replace with individual @usernames.
-*                     @AlumniPortugal/board
-/data/alumni/         @AlumniPortugal/board
+# Organization admins review directory entries and everything else.
+# Replace these users with @AlumniPortugal/board after that team is created.
+*                     @IcQuackson @MrSloth-dev @pulgamecanica @rda-cunh
+/data/alumni/         @IcQuackson @MrSloth-dev @pulgamecanica @rda-cunh

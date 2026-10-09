@@ -1,7 +1,6 @@
 name: validate directory
 on:
   pull_request:
-    paths: ["data/alumni/**"]
 jobs:
   validate:
     runs-on: ubuntu-latest
