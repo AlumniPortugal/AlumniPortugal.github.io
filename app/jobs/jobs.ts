@@ -1,4 +1,16 @@
-const API = 'https://api.github.com/repos/AlumniPortugal/AlumniPortugal.github.io/issues';
+import { githubRequest } from '@/lib/github';
+
+const ISSUES = '/repos/AlumniPortugal/AlumniPortugal.github.io/issues';
+
+export const JOB_ERRORS = {
+  invalidLink: 'Invalid job link. Choose a job from the jobs page.',
+  unavailable: 'This job is no longer available.',
+  closed: 'This job has closed and is no longer accepting applications.',
+  invalidListResponse: 'GitHub returned an unexpected response. We will retry automatically.',
+  invalidDetailResponse: 'GitHub returned an unexpected response. Please try again.',
+  listUnreachable: 'Could not reach GitHub. We will retry automatically.',
+  detailUnreachable: 'Could not reach GitHub. Please try again.',
+} as const;
 
 export type Job = {
   number: number;
@@ -24,18 +36,19 @@ function isIssue(value: unknown): value is Job & { pull_request?: unknown } {
 export async function getJobs(signal: AbortSignal): Promise<Job[]> {
   const jobs: Job[] = [];
   for (let page = 1; ; page++) {
-    const response = await fetch(
-      `${API}?state=open&labels=job,approved&sort=created&direction=desc&per_page=100&page=${page}`,
-      { signal, cache: 'no-store', headers: { Accept: 'application/vnd.github+json' } },
-    );
-    if (!response.ok) {
-      throw new Error(response.status === 403 || response.status === 429
-        ? 'GitHub is limiting requests. We will retry automatically in a few minutes.'
-        : 'Could not load jobs from GitHub. We will retry automatically.');
-    }
-    const issues: unknown = await response.json();
+    const issues = await githubRequest(ISSUES, {
+      signal,
+      params: {
+        state: 'open',
+        labels: ['job', 'approved'],
+        sort: 'created',
+        direction: 'desc',
+        perPage: 100,
+        page,
+      },
+    });
     if (!Array.isArray(issues) || !issues.every(isIssue)) {
-      throw new Error('GitHub returned an unexpected response. We will retry automatically.');
+      throw new Error(JOB_ERRORS.invalidListResponse);
     }
     jobs.push(...issues.filter((issue) => !('pull_request' in issue)));
     if (issues.length < 100) return jobs;
@@ -62,28 +75,21 @@ export function getJobDetails(body: string | null) {
 
 export async function getJob(issueNumber: string | null, signal: AbortSignal): Promise<Job> {
   if (!issueNumber || !/^[1-9]\d*$/.test(issueNumber) || !Number.isSafeInteger(Number(issueNumber))) {
-    throw new Error('Invalid job link. Choose a job from the jobs page.');
+    throw new Error(JOB_ERRORS.invalidLink);
   }
-  const response = await fetch(`${API}/${issueNumber}`, {
-    signal, cache: 'no-store', headers: { Accept: 'application/vnd.github+json' },
+  const issue = await githubRequest(`${ISSUES}/${issueNumber}`, {
+    signal, notFoundMessage: JOB_ERRORS.unavailable,
   });
-  if (response.status === 404) throw new Error('This job is no longer available.');
-  if (!response.ok) {
-    throw new Error(response.status === 403 || response.status === 429
-      ? 'GitHub is limiting requests. Please try again in a few minutes.'
-      : 'Could not load this job. Please try again.');
-  }
-  const issue: unknown = await response.json();
   if (!isIssue(issue) || !('labels' in issue) || !Array.isArray(issue.labels)
     || !('state' in issue) || (issue.state !== 'open' && issue.state !== 'closed')) {
-    throw new Error('GitHub returned an unexpected response. Please try again.');
+    throw new Error(JOB_ERRORS.invalidDetailResponse);
   }
   const labels = issue.labels.map((label: unknown) => (
     label && typeof label === 'object' && 'name' in label ? label.name : label
   ));
   if ('pull_request' in issue || !labels.includes('job') || !labels.includes('approved')) {
-    throw new Error('This job is no longer available.');
+    throw new Error(JOB_ERRORS.unavailable);
   }
-  if (issue.state === 'closed') throw new Error('This job has closed and is no longer accepting applications.');
+  if (issue.state === 'closed') throw new Error(JOB_ERRORS.closed);
   return issue;
 }

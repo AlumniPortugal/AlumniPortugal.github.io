@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { getJob, type Job } from '../getJobs';
+import { getJob, JOB_ERRORS, type Job } from '../jobs';
 import JobContent from '../JobContent';
 
 function JobRequest({ issueNumber }: { issueNumber: string | null }) {
@@ -20,7 +20,7 @@ function JobRequest({ issueNumber }: { issueNumber: string | null }) {
     }).catch((cause: unknown) => {
       if (!controller.signal.aborted) {
         setError(cause instanceof Error && cause.name !== 'TimeoutError'
-          ? cause.message : 'Could not reach GitHub. Please try again.');
+          ? cause.message : JOB_ERRORS.detailUnreachable);
       }
     });
     return () => controller.abort();

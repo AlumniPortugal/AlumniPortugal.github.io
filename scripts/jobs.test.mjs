@@ -3,11 +3,19 @@ import { readFile } from 'node:fs/promises';
 import { test } from 'node:test';
 import ts from 'typescript';
 
-const source = await readFile(new URL('../app/jobs/getJobs.ts', import.meta.url), 'utf8');
+const githubSource = await readFile(new URL('../lib/github.ts', import.meta.url), 'utf8');
+const githubOutput = ts.transpileModule(githubSource, {
+  compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
+}).outputText;
+const githubModuleUrl = `data:text/javascript;base64,${Buffer.from(githubOutput).toString('base64')}`;
+const { githubRequest } = await import(githubModuleUrl);
+
+const source = await readFile(new URL('../app/jobs/jobs.ts', import.meta.url), 'utf8');
 const { outputText } = ts.transpileModule(source, {
   compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
 });
-const { getJobs, getJobDetails, getJob } = await import(`data:text/javascript;base64,${Buffer.from(outputText).toString('base64')}`);
+const jobsOutput = outputText.replace('@/lib/github', githubModuleUrl);
+const { getJobs, getJobDetails, getJob } = await import(`data:text/javascript;base64,${Buffer.from(jobsOutput).toString('base64')}`);
 const issue = { number: 1, title: 'Engineer', created_at: '2026-10-22T10:00:00Z', user: { login: 'alumni' }, body: null };
 
 test('fetches all pages with both labels and excludes pull requests', async (t) => {
@@ -54,6 +62,7 @@ test('passes cancellation through to the request', async (t) => {
   controller.abort();
   t.mock.method(globalThis, 'fetch', async (_url, { signal }) => signal.throwIfAborted());
   await assert.rejects(getJobs(controller.signal), { name: 'AbortError' });
+  await assert.rejects(getJob('1', controller.signal), { name: 'AbortError' });
 });
 
 test('refreshes every minute, pauses when hidden and cleans up on unmount', async () => {
@@ -82,7 +91,7 @@ test('refreshes every minute, pauses when hidden and cleans up on unmount', asyn
       if (name === 'react/jsx-runtime') return { jsx: () => null, jsxs: () => null };
       if (name === 'next/link') return { default: () => null };
       if (name === './formatPostedAgo') return { formatPostedAgo: () => '1 minute ago' };
-      if (name === './getJobs') return { getJobs: async (signal) => {
+      if (name === './jobs') return { getJobs: async (signal) => {
         requests++;
         lastSignal = signal;
         return [];
@@ -267,7 +276,7 @@ test('cards link to shareable pages and preserve the list scroll position', asyn
       };
       if (name === 'react/jsx-runtime') return { jsx: (type, props) => ({ type, props }), jsxs: (type, props) => ({ type, props }) };
       if (name === 'next/link') return { default: () => null };
-      if (name === './getJobs') return { getJobDetails };
+      if (name === './jobs') return { getJobDetails };
       if (name === './formatPostedAgo') return { formatPostedAgo: () => '1 minute ago' };
       throw new Error(`Unexpected import: ${name}`);
     },
@@ -280,4 +289,57 @@ test('cards link to shareable pages and preserve the list scroll position', asyn
   assert.equal(storage.has('jobs-scroll'), false);
   link.props.onClick({ button: 0 });
   assert.equal(storage.get('jobs-scroll'), '480');
+});
+
+
+test('GitHub helper shares headers, disables caching and forwards the exact signal', async (t) => {
+  const signal = new AbortController().signal;
+  t.mock.method(globalThis, 'fetch', async (url, options) => {
+    assert.equal(url, 'https://api.github.com/repos/example/project/issues');
+    assert.equal(options.signal, signal);
+    assert.equal(options.cache, 'no-store');
+    assert.equal(options.headers.Accept, 'application/vnd.github+json');
+    return Response.json({ ok: true });
+  });
+  assert.deepEqual(await githubRequest('/repos/example/project/issues', { signal }), { ok: true });
+});
+
+test('GitHub helper handles generic failures and optional domain-specific 404 messages', async (t) => {
+  t.mock.method(globalThis, 'fetch', async () => new Response(null, { status: 404 }));
+  const signal = new AbortController().signal;
+  await assert.rejects(githubRequest('/missing', { signal }), /Could not load data from GitHub/);
+  await assert.rejects(githubRequest('/missing', { signal, notFoundMessage: 'Job unavailable' }), /Job unavailable/);
+});
+
+
+test('GitHub helper serializes typed job filters as query parameters', async (t) => {
+  const params = { labels: ['job', 'approved'], page: 2, perPage: 100, state: 'open', sort: 'created', direction: 'desc' };
+  t.mock.method(globalThis, 'fetch', async (target) => {
+    const url = new URL(target);
+    assert.equal(url.searchParams.get('labels'), 'job,approved');
+    assert.equal(url.searchParams.get('page'), '2');
+    assert.equal(url.searchParams.get('per_page'), '100');
+    assert.equal(url.searchParams.has('perPage'), false);
+    assert.equal(url.searchParams.get('state'), 'open');
+    assert.equal(url.searchParams.get('sort'), 'created');
+    assert.equal(url.searchParams.get('direction'), 'desc');
+    return Response.json([]);
+  });
+  await githubRequest('/repos/example/project/issues', { signal: new AbortController().signal, params });
+  assert.deepEqual(params.labels, ['job', 'approved']);
+});
+
+
+test('GitHub helper omits undefined filters and encodes label names', async (t) => {
+  t.mock.method(globalThis, 'fetch', async (target) => {
+    const url = new URL(target);
+    assert.equal(url.searchParams.has('state'), false);
+    assert.equal(url.searchParams.has('direction'), false);
+    assert.equal(url.searchParams.get('labels'), 'C++,React & Node.js');
+    return Response.json([]);
+  });
+  await githubRequest('/repos/example/project/issues', {
+    signal: new AbortController().signal,
+    params: { state: undefined, direction: undefined, labels: ['C++', 'React & Node.js'] },
+  });
 });

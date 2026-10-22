@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getJobs, getJobDetails, type Job } from './getJobs';
+import { getJobs, getJobDetails, JOB_ERRORS, type Job } from './jobs';
 import { formatPostedAgo } from './formatPostedAgo';
 import Link from 'next/link';
 
@@ -33,7 +33,7 @@ export default function JobsList() {
       } catch (cause) {
         if (!controller.signal.aborted) {
           setError(cause instanceof Error && cause.name !== 'TimeoutError'
-            ? cause.message : 'Could not reach GitHub. We will retry automatically.');
+            ? cause.message : JOB_ERRORS.listUnreachable);
         }
         delay = 300_000;
       } finally {

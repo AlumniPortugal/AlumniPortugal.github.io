@@ -3,7 +3,7 @@ import remarkGfm from 'remark-gfm';
 import remarkBreaks from 'remark-breaks';
 import rehypeRaw from 'rehype-raw';
 import rehypeSanitize from 'rehype-sanitize';
-import type { Job } from './getJobs';
+import type { Job } from './jobs';
 
 export default function JobContent({ job }: { job: Job }) {
   return (
