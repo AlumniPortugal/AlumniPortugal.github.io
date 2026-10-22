@@ -8,7 +8,7 @@ Homepage + alumni directory + jobs board for the 42 Portugal alumni community.
 |---|---|
 | Homepage | `/` |
 | Alumni Directory | `/directory/` |
-| Jobs & Referrals | [issues with `job` + `approved`](https://github.com/AlumniPortugal/AlumniPortugal.github.io/issues?q=is%3Aopen+label%3Ajob+label%3Aapproved) |
+| Jobs & Referrals | `/jobs/` |
 | Certification Calculator | separate repo (needs a backend) |
 
 ## Join the directory
