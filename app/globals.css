@@ -18,3 +18,23 @@ h1 { font-size: 1.8rem; }
 .filters input, .filters select { font: inherit; padding: .4rem .6rem; border: 1px solid #ccc; border-radius: 6px; background: #fff; }
 .filters input { flex: 1 1 200px; }
 .muted { color: #777; font-size: .9rem; }
+
+.job-card { position: relative; }
+.job-card-open { position: absolute; inset: 0; width: 100%; border: 0; border-radius: inherit; background: transparent; cursor: pointer; }
+.job-card-open:focus-visible { outline: 2px solid #0b6; outline-offset: 3px; }
+.job-card:hover { border-color: #0b6; }
+.job-card a:not(.job-card-open) { position: relative; }
+.job-description { overflow-wrap: anywhere; }
+.job-description h3 { font-size: 1rem; margin: 1.25rem 0 .4rem; }
+.job-description pre { white-space: pre-wrap; }
+.job-description img { max-width: 100%; height: auto; }
+
+.job-description table { display: block; max-width: 100%; overflow-x: auto; border-collapse: collapse; margin: 1rem 0; }
+.job-description th, .job-description td { border: 1px solid #e5e5e5; padding: .4rem .6rem; }
+.job-description th { background: #fafafa; }
+.job-description blockquote { margin-left: 0; padding-left: 1rem; border-left: 3px solid #e5e5e5; color: #777; }
+.job-description .contains-task-list { list-style: none; padding-left: 1rem; }
+.job-description details { margin: 1rem 0; }
+.job-description summary { cursor: pointer; font-weight: bold; }
+
+.job-retry { font: inherit; padding: .3rem .6rem; border: 1px solid #ccc; border-radius: 6px; background: #fff; cursor: pointer; }

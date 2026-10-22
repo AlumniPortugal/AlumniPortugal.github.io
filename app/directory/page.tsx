@@ -9,6 +9,7 @@ export default function Directory() {
   const people = getAlumni();
   return (
     <main>
+      <a href="/">← Home</a>
       <h1>Alumni Directory</h1>
       <p className="muted">
         <a href={`${REPO}/blob/main/.github/PULL_REQUEST_TEMPLATE.md`}>Add or update your entry</a>.

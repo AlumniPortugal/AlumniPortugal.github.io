@@ -1,5 +1,3 @@
-const REPO = 'https://github.com/AlumniPortugal/AlumniPortugal.github.io';
-
 const products = [
   {
     title: 'Alumni Directory',
@@ -16,7 +14,7 @@ const products = [
   {
     title: 'Jobs & Referrals',
     blurb: 'Open roles posted by alumni, with referrals.',
-    href: `${REPO}/issues?q=is%3Aopen+label%3Ajob+label%3Aapproved`,
+    href: '/jobs/',
     cta: 'See open roles',
   },
 ];
