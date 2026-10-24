@@ -24,7 +24,7 @@
 
 ## Alumni directory change
 
-<!-- Complete only when adding or updating data/alumni/*.yml. -->
+<!-- Complete only when adding or updating data/alumni/*.yml. Adding your own entry? Use the new-entry template instead: PULL_REQUEST_TEMPLATE/new-entry.md -->
 
 - [ ] I am adding or updating my own profile with accurate, voluntary data.
 - [ ] The filename is `data/alumni/<intra_username>.yml` and matches the field.
