@@ -27,7 +27,7 @@ Homepage + alumni directory + jobs board for the 42 Portugal alumni community.
    open_to: [mentoring, collaboration]
    ```
 
-2. Open a PR. CI validates the entry and verifies your 42 intra username against the 42 API; a board member reviews and merges.
+2. [Follow the new-entry instructions](https://github.com/AlumniPortugal/AlumniPortugal.github.io/blob/main/.github/PULL_REQUEST_TEMPLATE/new-entry.md), add your file, and open a PR. CI validates the entry and verifies your 42 intra username against the 42 API; a board member reviews and merges.
 3. The site rebuilds and deploys automatically.
 
 ## Post a job
