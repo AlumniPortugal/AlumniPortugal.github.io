@@ -10,8 +10,8 @@
 
 <!-- List exact commands and manual checks. Write "Not run" with a reason. -->
 
-- [ ] `npm run validate`
-- [ ] `npm run build` (required for application, dependency, or config changes)
+- [ ] `bun run validate`
+- [ ] `bun run build` (required for application, dependency, or config changes)
 - [ ] Manual UI/accessibility check (required for visible UI changes)
 
 ## Risks and follow-ups
