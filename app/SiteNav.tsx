@@ -52,8 +52,7 @@ export default function SiteNav() {
     return () => query.removeEventListener('change', sync);
   }, []);
 
-  function toggleTheme() {
-    const next = dark ? 'light' : 'dark';
+  function setTheme(next: 'light' | 'dark') {
     document.documentElement.dataset.theme = next;
     try {
       localStorage.setItem('theme', next);
@@ -75,16 +74,28 @@ export default function SiteNav() {
           {link.label}
         </a>
       ))}
-      <button
-        type="button"
-        className="theme-toggle"
-        onClick={toggleTheme}
-        aria-pressed={dark}
-        aria-label="Dark mode"
-        title={dark ? 'Switch to light mode' : 'Switch to dark mode'}
-      >
-        {dark ? <SunIcon /> : <MoonIcon />}
-      </button>
+      <div className="theme-switch" role="group" aria-label="Theme">
+        <button
+          type="button"
+          className={dark ? undefined : 'is-on'}
+          onClick={() => setTheme('light')}
+          aria-pressed={!dark}
+          aria-label="Light mode"
+          title="Light mode"
+        >
+          <SunIcon />
+        </button>
+        <button
+          type="button"
+          className={dark ? 'is-on' : undefined}
+          onClick={() => setTheme('dark')}
+          aria-pressed={dark}
+          aria-label="Dark mode"
+          title="Dark mode"
+        >
+          <MoonIcon />
+        </button>
+      </div>
     </nav>
   );
 }

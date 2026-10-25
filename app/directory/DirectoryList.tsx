@@ -118,7 +118,9 @@ export default function DirectoryList({ people }: { people: Alumni[] }) {
             {a.open_to?.length ? (
               <ul className="pills" aria-label="Open to">
                 {a.open_to.map((o) => (
-                  <li key={o}>{label(o)}</li>
+                  <li key={o} className={`open-${o}`}>
+                    {label(o)}
+                  </li>
                 ))}
               </ul>
             ) : null}
