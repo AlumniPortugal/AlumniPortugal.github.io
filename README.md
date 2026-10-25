@@ -39,8 +39,8 @@ Quiet postings go stale after 45 days and close 7 days later.
 ## Develop
 
 ```sh
-npm install
-npm run dev        # http://localhost:3000
-npm run validate   # check every directory entry
-npm run build      # static export into out/
+bun install
+bun run dev        # http://localhost:3000
+bun run validate   # check every directory entry
+bun run build      # static export into out/
 ```

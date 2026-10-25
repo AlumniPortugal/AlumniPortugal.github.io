@@ -64,8 +64,8 @@ routing, and compatibility with GitHub Pages.
 1. Inspect the relevant files and current Git state; preserve unrelated work.
 2. Make one focused change with the smallest useful diff.
 3. Run checks proportional to the change:
-   - Always: `npm run validate`
-   - Application, dependency, or configuration changes: `npm run build`
+   - Always: `bun run validate`
+   - Application, dependency, or configuration changes: `bun run build`
    - UI changes: manually check interaction, keyboard use, and responsive layout
 4. Report anything not run and why.
 5. Never push directly to `main`. Push a focused branch and open a pull request.
