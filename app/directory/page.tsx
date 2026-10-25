@@ -12,7 +12,7 @@ export default function Directory() {
       <a href="/">← Home</a>
       <h1>Alumni Directory</h1>
       <p className="muted">
-        <a href={`${REPO}/blob/main/.github/PULL_REQUEST_TEMPLATE.md`}>Add or update your entry</a>.
+        <a href={`${REPO}/blob/main/.github/PULL_REQUEST_TEMPLATE/new-entry.md`}> Add or update your entry </a>
       </p>
       <DirectoryList people={people} />
     </main>
