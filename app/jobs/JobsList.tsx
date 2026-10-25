@@ -90,20 +90,26 @@ export default function JobsList() {
                   }
                 }}
               />
-              <strong>
+              <p className="job-title">
                 {details.role ?? job.title.replace(/^\[job\]\s*/i, '')}
-              </strong>
-              {details.company ? ` @ ${details.company}` : ''}
-              <br />
-              <span className="muted">
-                {details.location ? `${details.location} · ` : ''}
-                {details.type ? `${details.type} · ` : ''}
+                {details.referral ? <span className="tag">referral</span> : null}
+              </p>
+              {details.company ? <p className="role">{details.company}</p> : null}
+              <p className="where">
+                {[details.location, details.type].filter(Boolean).join(' · ')}
+                {details.location || details.type ? ' · ' : ''}
                 <time dateTime={job.created_at} title={new Date(job.created_at).toLocaleString()}>
                   {formatPostedAgo(job.created_at)}
                 </time>
-                {details.referral ? ' · Referral available' : ''}
+              </p>
+              {job.user ? (
+                <p className="muted">
+                  <a href={`https://github.com/${encodeURIComponent(job.user.login)}`}>@{job.user.login}</a>
+                </p>
+              ) : null}
+              <span className="view-details" aria-hidden="true">
+                View details →
               </span>
-              {job.user ? <><br /><a href={`https://github.com/${encodeURIComponent(job.user.login)}`}>@{job.user.login}</a></> : null}
             </li>
           );
         })}

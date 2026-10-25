@@ -3,6 +3,19 @@
 import { useMemo, useState } from 'react';
 import type { Alumni } from '@/lib/alumni';
 
+function initials(name: string) {
+  return name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0])
+    .join('');
+}
+
+function label(value: string) {
+  return value.replace(/_/g, ' ');
+}
+
 export default function DirectoryList({ people }: { people: Alumni[] }) {
   const [q, setQ] = useState('');
   const [location, setLocation] = useState('');
@@ -75,37 +88,44 @@ export default function DirectoryList({ people }: { people: Alumni[] }) {
           <option value="">Open to anything</option>
           {openToOptions.map((o) => (
             <option key={o} value={o}>
-              {o.replace(/_/g, ' ')}
+              {label(o)}
             </option>
           ))}
         </select>
       </div>
       <p className="muted">
-        {filtered.length} of {people.length} alumni.
+        Showing {filtered.length} of {people.length} alumni.
       </p>
       <ul className="people">
         {filtered.map((a) => (
           <li key={a.intra_username}>
-            <strong>{a.name}</strong> — {a.field}
-            {a.company ? ` @ ${a.company}` : ''}
-            {a.location ? ` · ${a.location}` : ''}
-            <br />
-            <a
-              className="muted"
-              href={`https://profile-v3.intra.42.fr/users/${a.intra_username}`}
-            >
-              @{a.intra_username}
-            </a>{' '}
-            · <a href={`https://github.com/${a.github}`}>@{a.github}</a>
-            {a.skills?.length ? <span className="muted"> · {a.skills.join(', ')}</span> : null}
-            {a.open_to?.length ? (
-              <>
-                <br />
-                <span className="muted">
-                  open to: {a.open_to.map((o) => o.replace(/_/g, ' ')).join(', ')}
-                </span>
-              </>
+            <span className="avatar" aria-hidden="true">
+              {initials(a.name)}
+            </span>
+            <p className="name">{a.name}</p>
+            <p className="role">
+              {a.field}
+              {a.company ? ` @ ${a.company}` : ''}
+            </p>
+            {a.location ? <p className="where"><span className="badge-soft">{a.location}</span></p> : null}
+            {a.skills?.length ? (
+              <ul className="chips" aria-label="Skills">
+                {a.skills.map((s) => (
+                  <li key={s}>{s}</li>
+                ))}
+              </ul>
             ) : null}
+            {a.open_to?.length ? (
+              <ul className="pills" aria-label="Open to">
+                {a.open_to.map((o) => (
+                  <li key={o}>{label(o)}</li>
+                ))}
+              </ul>
+            ) : null}
+            <div className="profile-links">
+              <a href={`https://profile-v3.intra.42.fr/users/${a.intra_username}`}>Profile →</a>
+              <a href={`https://github.com/${a.github}`}>@{a.github}</a>
+            </div>
           </li>
         ))}
         {filtered.length === 0 ? <li className="muted">No matches.</li> : null}
