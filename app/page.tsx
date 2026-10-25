@@ -7,8 +7,8 @@ const products = [
     title: 'Alumni Directory',
     blurb: "Who's doing what — a voluntary directory of 42 Portugal alumni.",
     href: '/directory/',
-    cta: 'Browse the directory →',
-    icon: 'people',
+    cta: 'Browse the directory',
+    icon: 'directory',
     tone: 'primary',
   },
   {
@@ -16,29 +16,33 @@ const products = [
     blurb: 'Map your 42 projects to certifications worth taking.',
     href: null,
     cta: null,
-    icon: 'target',
+    icon: 'calculator',
     tone: 'secondary',
   },
   {
     title: 'Jobs & Referrals',
     blurb: 'Open roles posted by alumni, with referrals.',
     href: '/jobs/',
-    cta: 'See open roles →',
-    icon: 'briefcase',
+    cta: 'See open roles',
+    icon: 'jobs',
     tone: 'primary',
   },
 ];
 
+// Material Symbols (Apache-2.0) paths, viewBox 0 -960 960 960.
+const ICONS: Record<string, string> = {
+  directory:
+    'M40-160v-112q0-34 17.5-62.5T104-378q62-31 126-46.5T360-440q66 0 130 15.5T616-378q29 15 46.5 43.5T680-272v112H40Zm720 0v-120q0-44-24.5-84.5T666-434q51 6 96 20.5t84 35.5q36 20 55 44.5t19 53.5v120H760ZM247-527q-47-47-47-113t47-113q47-47 113-47t113 47q47 47 47 113t-47 113q-47 47-113 47t-113-47Zm466 0q-47 47-113 47-11 0-28-2.5t-28-5.5q27-32 41.5-71t14.5-81q0-42-14.5-81T544-792q14-5 28-6.5t28-1.5q66 0 113 47t47 113q0 66-47 113ZM120-240h480v-32q0-11-5.5-20T580-306q-54-27-109-40.5T360-360q-56 0-111 13.5T140-306q-9 5-14.5 14t-5.5 20v32Zm296.5-343.5Q440-607 440-640t-23.5-56.5Q393-720 360-720t-56.5 23.5Q280-673 280-640t23.5 56.5Q327-560 360-560t56.5-23.5ZM360-240Zm0-400Z',
+  calculator:
+    'm344-60-76-128-144-32 14-148-98-112 98-112-14-148 144-32 76-128 136 58 136-58 76 128 144 32-14 148 98 112-98 112 14 148-144 32-76 128-136-58-136 58Zm34-102 102-44 104 44 56-96 110-26-10-112 74-84-74-86 10-112-110-24-58-96-102 44-104-44-56 96-110 24 10 112-74 86 74 84-10 114 110 24 58 96Zm102-318Zm-42 142 226-226-56-58-170 170-86-84-56 56 142 142Z',
+  jobs:
+    'M160-120q-33 0-56.5-23.5T80-200v-440q0-33 23.5-56.5T160-720h160v-80q0-33 23.5-56.5T400-880h160q33 0 56.5 23.5T640-800v80h160q33 0 56.5 23.5T880-640v440q0 33-23.5 56.5T800-120H160Zm0-80h640v-440H160v440Zm240-520h160v-80H400v80ZM160-200v-440 440Z',
+};
+
 function Icon({ name }: { name: string }) {
-  const paths: Record<string, string> = {
-    people:
-      'M8 9.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5ZM3 14c0-2.2 2.2-3.6 5-3.6s5 1.4 5 3.6M13 9.2a1.8 1.8 0 1 0 0-3.6',
-    target: 'M8 14A6 6 0 1 0 8 2a6 6 0 0 0 0 12Zm0-3.2a2.8 2.8 0 1 0 0-5.6 2.8 2.8 0 0 0 0 5.6Z',
-    briefcase: 'M2.5 6.2h11a1 1 0 0 1 1 1v5.3a1 1 0 0 1-1 1h-11a1 1 0 0 1-1-1V7.2a1 1 0 0 1 1-1ZM6 6V4.6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1V6',
-  };
   return (
-    <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d={paths[name]} />
+    <svg viewBox="0 -960 960 960" width="20" height="20" fill="currentColor" aria-hidden="true">
+      <path d={ICONS[name]} />
     </svg>
   );
 }
@@ -123,7 +127,10 @@ export default function Home() {
             <p>{p.blurb}</p>
             {p.href && p.cta ? (
               <div className="card-footer">
-                <a href={p.href}>{p.cta}</a>
+                <a href={p.href}>
+                  <span>{p.cta}</span>
+                  <span aria-hidden="true">→</span>
+                </a>
               </div>
             ) : (
               <div className="card-footer">
