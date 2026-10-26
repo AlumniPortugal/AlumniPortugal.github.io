@@ -47,39 +47,89 @@ function Icon({ name }: { name: string }) {
   );
 }
 
+type Node = { angle: number; color: string };
+
+/** Places an electron exactly on the ring circumference, centred on the stroke. */
+function onRing(angle: number, radius = 50) {
+  const rad = (angle * Math.PI) / 180;
+  return {
+    left: `${50 + radius * Math.cos(rad)}%`,
+    top: `${50 + radius * Math.sin(rad)}%`,
+  };
+}
+
+const RINGS: { size: number; className: string; animation: string; nodes: Node[] }[] = [
+  {
+    size: 100,
+    className: 'is-dashed',
+    animation: 'spin-cw 42s linear infinite',
+    nodes: [
+      { angle: 270, color: 'var(--primary-ctr)' },
+      { angle: 122, color: 'var(--secondary)' },
+    ],
+  },
+  {
+    size: 85,
+    className: 'is-solid',
+    animation: 'spin-ccw 34s linear infinite',
+    nodes: [
+      { angle: 6, color: 'var(--accent-cyan)' },
+      { angle: 208, color: 'var(--primary-ctr)' },
+    ],
+  },
+  {
+    size: 70,
+    className: 'is-dashed',
+    animation: 'spin-cw 26s linear infinite',
+    nodes: [
+      { angle: 244, color: 'var(--secondary)' },
+      { angle: 62, color: 'var(--primary-ctr)' },
+    ],
+  },
+  {
+    size: 55,
+    className: 'is-solid',
+    animation: 'spin-ccw 20s linear infinite',
+    nodes: [
+      { angle: 104, color: 'var(--primary-ctr)' },
+      { angle: 222, color: 'var(--accent-cyan)' },
+    ],
+  },
+  {
+    size: 40,
+    className: 'is-dashed',
+    animation: 'spin-cw 15s linear infinite',
+    nodes: [
+      { angle: 176, color: 'var(--secondary)' },
+      { angle: 296, color: 'var(--primary-ctr)' },
+    ],
+  },
+  {
+    size: 25,
+    className: 'is-soft',
+    animation: 'spin-ccw 10s linear infinite',
+    nodes: [{ angle: 270, color: 'var(--accent-cyan)' }],
+  },
+];
+
 /** Decorative "holy graph" orbit: six counter-rotating rings plus a slow ambient layer. */
 function Orbit() {
   return (
     <div className="orbit-stage" aria-hidden="true">
       <div className="orbit-ambient">
-        <span className="orbit-node is-ambient" style={{ top: '-3%', right: '22%', color: 'var(--primary-ctr)', animationDelay: '0s' }} />
-        <span className="orbit-node is-ambient" style={{ top: '28%', left: '-2%', color: 'var(--accent-cyan)', animationDelay: '2.4s' }} />
-        <span className="orbit-node is-ambient" style={{ bottom: '-2%', right: '30%', color: 'var(--secondary)', animationDelay: '4.1s' }} />
+        <span className="orbit-node is-ambient" style={{ ...onRing(268, 56), color: 'var(--primary-ctr)', animationDelay: '0s' }} />
+        <span className="orbit-node is-ambient" style={{ ...onRing(154, 57), color: 'var(--accent-cyan)', animationDelay: '2.4s' }} />
+        <span className="orbit-node is-ambient" style={{ ...onRing(74, 55), color: 'var(--secondary)', animationDelay: '4.1s' }} />
       </div>
 
-      <div className="orbit-ring is-dashed" style={{ width: '100%', animation: 'spin-cw 42s linear infinite' }}>
-        <span className="orbit-node" style={{ top: '-3px', left: '50%', color: 'var(--primary-ctr)' }} />
-        <span className="orbit-node" style={{ bottom: '-3px', left: '33%', color: 'var(--secondary)' }} />
-      </div>
-      <div className="orbit-ring is-solid" style={{ width: '85%', animation: 'spin-ccw 34s linear infinite' }}>
-        <span className="orbit-node" style={{ top: '50%', right: '-3px', color: 'var(--accent-cyan)' }} />
-        <span className="orbit-node" style={{ top: '18%', left: '10%', color: 'var(--primary-ctr)' }} />
-      </div>
-      <div className="orbit-ring is-dashed" style={{ width: '70%', animation: 'spin-cw 26s linear infinite' }}>
-        <span className="orbit-node" style={{ top: '-3px', left: '25%', color: 'var(--secondary)' }} />
-        <span className="orbit-node" style={{ bottom: '12%', right: '12%', color: 'var(--primary-ctr)' }} />
-      </div>
-      <div className="orbit-ring is-solid" style={{ width: '55%', animation: 'spin-ccw 20s linear infinite' }}>
-        <span className="orbit-node" style={{ bottom: '-3px', right: '25%', color: 'var(--primary-ctr)' }} />
-        <span className="orbit-node" style={{ top: '12%', left: '14%', color: 'var(--accent-cyan)' }} />
-      </div>
-      <div className="orbit-ring is-dashed" style={{ width: '40%', animation: 'spin-cw 15s linear infinite' }}>
-        <span className="orbit-node" style={{ top: '48%', left: '-4px', color: 'var(--secondary)' }} />
-        <span className="orbit-node" style={{ top: '-3px', right: '18%', color: 'var(--primary-ctr)' }} />
-      </div>
-      <div className="orbit-ring is-soft" style={{ width: '25%', animation: 'spin-ccw 10s linear infinite' }}>
-        <span className="orbit-node" style={{ top: '-3px', left: '50%', color: 'var(--accent-cyan)' }} />
-      </div>
+      {RINGS.map((ring) => (
+        <div key={ring.size} className={`orbit-ring ${ring.className}`} style={{ width: `${ring.size}%`, animation: ring.animation }}>
+          {ring.nodes.map((node) => (
+            <span key={node.angle} className="orbit-node" style={{ ...onRing(node.angle), color: node.color }} />
+          ))}
+        </div>
+      ))}
+
       <div className="orbit-core">libft</div>
     </div>
   );

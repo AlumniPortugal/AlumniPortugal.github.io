@@ -77,14 +77,14 @@ h2 { font-size: 1.375rem; line-height: 1.36; letter-spacing: -0.015em; font-weig
 .orbit-ring.is-dashed { border: 1px dashed color-mix(in srgb, var(--outline-variant) 55%, transparent); }
 .orbit-ring.is-solid { border: 1px solid var(--ring); }
 .orbit-ring.is-soft { border: 1px solid var(--secondary-fixed); }
-.orbit-node { position: absolute; width: .5rem; height: .5rem; border-radius: 50%; background: currentColor; box-shadow: 0 0 8px currentColor; }
+.orbit-node { position: absolute; width: .5rem; height: .5rem; border-radius: 50%; background: currentColor; box-shadow: 0 0 8px currentColor; transform: translate(-50%, -50%); }
 .orbit-ambient { position: absolute; inset: 0; animation: spin-cw 60s linear infinite; }
 .orbit-node.is-ambient { animation: node-twinkle 8s ease-in-out infinite; }
 @keyframes node-twinkle {
-  0%, 100% { opacity: .4; transform: scale(.85); }
-  50% { opacity: 1; transform: scale(1.15); }
+  0%, 100% { opacity: .4; transform: translate(-50%, -50%) scale(.85); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.15); }
 }
-.orbit-core { position: relative; z-index: 1; display: grid; place-items: center; width: 4rem; height: 4rem; border-radius: 50%; background: linear-gradient(135deg, var(--primary-ctr), var(--primary)); color: var(--on-primary-ctr); font-size: .875rem; font-weight: 700; letter-spacing: -0.02em; color: var(--on-primary-ctr); box-shadow: 0 8px 24px color-mix(in srgb, var(--primary-ctr) 30%, transparent); animation: pulse-core 3.5s ease-in-out infinite; }
+.orbit-core { position: relative; z-index: 1; display: grid; place-items: center; width: 3.1rem; height: 3.1rem; border-radius: 50%; background: linear-gradient(135deg, var(--primary-ctr), var(--primary)); color: var(--on-primary-ctr); font-size: .8rem; font-weight: 700; letter-spacing: -0.02em; box-shadow: 0 8px 24px color-mix(in srgb, var(--primary-ctr) 30%, transparent); animation: pulse-core 3.5s ease-in-out infinite; }
 
 @media (prefers-reduced-motion: reduce) {
   .orbit-ring, .orbit-core, .orbit-ambient, .orbit-node.is-ambient { animation: none !important; }
