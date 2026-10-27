@@ -71,7 +71,7 @@ export default function JobsList() {
           <a href={`${REPO}/issues?q=is%3Aopen+label%3Ajob+label%3Aapproved`}>View jobs on GitHub</a>.
         </p>
       ) : null}
-      <ul className="people">
+      <ul className="people jobs">
         {jobs?.map((job) => {
           const details = getJobDetails(job.body);
           return (
@@ -90,20 +90,30 @@ export default function JobsList() {
                   }
                 }}
               />
-              <strong>
-                {details.role ?? job.title.replace(/^\[job\]\s*/i, '')}
-              </strong>
-              {details.company ? ` @ ${details.company}` : ''}
-              <br />
-              <span className="muted">
-                {details.location ? `${details.location} · ` : ''}
-                {details.type ? `${details.type} · ` : ''}
-                <time dateTime={job.created_at} title={new Date(job.created_at).toLocaleString()}>
+              <div className="job-main">
+                <div className="job-meta">
+                  {details.company ? <span className="job-company">{details.company}</span> : null}
+                  <span className="muted">{[details.location, details.type].filter(Boolean).join(' · ')}</span>
+                  {details.referral ? <span className="tag">direct referral</span> : null}
+                </div>
+                <p className="job-title">{details.role ?? job.title.replace(/^\[job\]\s*/i, '')}</p>
+                {job.user ? (
+                  <p className="posted-by">
+                    Posted by{' '}
+                    <a href={`https://github.com/${encodeURIComponent(job.user.login)}`}>
+                      @{job.user.login}
+                    </a>
+                  </p>
+                ) : null}
+              </div>
+              <div className="job-side">
+                <time className="muted" dateTime={job.created_at} title={new Date(job.created_at).toLocaleString()}>
                   {formatPostedAgo(job.created_at)}
                 </time>
-                {details.referral ? ' · Referral available' : ''}
-              </span>
-              {job.user ? <><br /><a href={`https://github.com/${encodeURIComponent(job.user.login)}`}>@{job.user.login}</a></> : null}
+                <span className="view-details" aria-hidden="true">
+                  View details
+                </span>
+              </div>
             </li>
           );
         })}

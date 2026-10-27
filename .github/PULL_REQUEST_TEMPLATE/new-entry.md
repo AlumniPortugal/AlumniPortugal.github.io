@@ -34,7 +34,7 @@ open_to: [mentoring] # optional; one or more of: mentoring | collaboration | job
 - [ ] `github` is your GitHub handle only, not a full URL.
 - [ ] `open_to` uses only `mentoring`, `collaboration`, or `job_opportunities`.
 - [ ] The data is accurate, voluntary, and safe to publish — nothing private or inferred.
-- [ ] `npm run validate` passes locally.
+- [ ] `bun run validate` passes locally.
 
 CI validates the entry and checks your 42 intra username. A community board member
 reviews and merges; the site rebuilds on its own after that.
