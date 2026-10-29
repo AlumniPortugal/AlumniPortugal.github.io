@@ -16,6 +16,11 @@ function label(value: string) {
   return value.replace(/_/g, ' ');
 }
 
+// A long skills list wraps for many rows and stretches the alumni card. Show
+// the first few and fold the rest into a "+N…" chip (issue #19); the full list
+// stays reachable through the chip's tooltip and the skill filter.
+const MAX_VISIBLE_SKILLS = 6;
+
 export default function DirectoryList({ people }: { people: Alumni[] }) {
   const [q, setQ] = useState('');
   const [location, setLocation] = useState('');
@@ -110,9 +115,14 @@ export default function DirectoryList({ people }: { people: Alumni[] }) {
             {a.location ? <p className="where"><span className="badge-soft">{a.location}</span></p> : null}
             {a.skills?.length ? (
               <ul className="chips" aria-label="Skills">
-                {a.skills.map((s) => (
+                {a.skills.slice(0, MAX_VISIBLE_SKILLS).map((s) => (
                   <li key={s}>{s}</li>
                 ))}
+                {a.skills.length > MAX_VISIBLE_SKILLS ? (
+                  <li title={a.skills.slice(MAX_VISIBLE_SKILLS).join(', ')}>
+                    +{a.skills.length - MAX_VISIBLE_SKILLS}…
+                  </li>
+                ) : null}
               </ul>
             ) : null}
             {a.open_to?.length ? (
