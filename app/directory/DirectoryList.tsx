@@ -16,8 +16,12 @@ function label(value: string) {
   return value.replace(/_/g, ' ');
 }
 
+// Keeps every card the same height; the rest stay available on the tooltip.
+const MAX_SKILLS = 5;
+
 export default function DirectoryList({ people }: { people: Alumni[] }) {
   const [q, setQ] = useState('');
+  const [openSkills, setOpenSkills] = useState<Record<string, boolean>>({});
   const [location, setLocation] = useState('');
   const [skill, setSkill] = useState('');
   const [openTo, setOpenTo] = useState('');
@@ -32,6 +36,9 @@ export default function DirectoryList({ people }: { people: Alumni[] }) {
     () => [...new Set(people.flatMap((p) => p.open_to ?? []))].sort(),
     [people],
   );
+
+  const toggleSkills = (id: string) =>
+    setOpenSkills((prev) => ({ ...prev, [id]: !prev[id] }));
 
   const query = q.trim().toLowerCase();
   const filtered = people.filter((p) => {
@@ -110,9 +117,26 @@ export default function DirectoryList({ people }: { people: Alumni[] }) {
             {a.location ? <p className="where"><span className="badge-soft">{a.location}</span></p> : null}
             {a.skills?.length ? (
               <ul className="chips" aria-label="Skills">
-                {a.skills.map((s) => (
+                {(openSkills[a.intra_username] ? a.skills : a.skills.slice(0, MAX_SKILLS)).map((s) => (
                   <li key={s}>{s}</li>
                 ))}
+                {a.skills.length > MAX_SKILLS ? (
+                  <li>
+                    <button
+                      type="button"
+                      className="chip-more"
+                      onClick={() => toggleSkills(a.intra_username)}
+                      aria-expanded={Boolean(openSkills[a.intra_username])}
+                      aria-label={
+                        openSkills[a.intra_username]
+                          ? 'Show fewer skills'
+                          : `Show ${a.skills.length - MAX_SKILLS} more skills`
+                      }
+                    >
+                      <span aria-hidden="true">{openSkills[a.intra_username] ? '−' : '…'}</span>
+                    </button>
+                  </li>
+                ) : null}
               </ul>
             ) : null}
             {a.open_to?.length ? (

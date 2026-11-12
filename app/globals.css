@@ -59,6 +59,7 @@ a { color: var(--link); text-decoration-color: color-mix(in srgb, var(--primary-
 a:hover { color: var(--primary); }
 :focus-visible { outline: 2px solid var(--primary-ctr); outline-offset: 3px; border-radius: 6px; }
 
+
 h1 { font-size: clamp(2rem, 3.2vw, 2.5rem); line-height: 1.2; letter-spacing: -0.03em; font-weight: 700; margin: 0 0 1rem; max-width: 28ch; }
 h2 { font-size: 1.375rem; line-height: 1.36; letter-spacing: -0.015em; font-weight: 700; margin: 0 0 .4rem; }
 .muted { color: var(--tertiary); font-size: .8125rem; }
@@ -164,6 +165,8 @@ h2 { font-size: 1.375rem; line-height: 1.36; letter-spacing: -0.015em; font-weig
 .where { margin: 0 0 .4rem; color: var(--muted); font-size: .85rem; }
 .job-title { margin: 0 0 .2rem; font-size: 1.02rem; font-weight: 600; }
 .chips { display: flex; flex-wrap: wrap; gap: .3rem; margin: .25rem 0 0; padding: 0; list-style: none; }
+button.chip-more { display: inline-flex; align-items: center; justify-content: center; min-width: 1.6rem; padding: .15rem .45rem; border: 1px dashed var(--card-border); border-radius: var(--radius-sm); background: transparent; color: var(--muted); font: inherit; font-size: .75rem; line-height: 1.35; cursor: pointer; transition: color .15s, border-color .15s; }
+button.chip-more:hover { color: var(--primary); border-color: var(--primary); }
 .chips li { padding: .15rem .55rem; border-radius: var(--radius-sm); background: var(--surface-container); font-size: .75rem; }
 .pills { display: flex; flex-wrap: wrap; gap: .3rem; margin: .35rem 0 0; padding: 0; list-style: none; }
 .pills li { display: inline-flex; flex-direction: row; align-items: center; gap: .3rem; padding: .2rem .6rem; border-radius: 999px; color: var(--tag-color, var(--primary)); background: color-mix(in srgb, currentColor 14%, transparent); border: 1px solid color-mix(in srgb, currentColor 35%, transparent); font-size: .75rem; font-weight: 600; }
